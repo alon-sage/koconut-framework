@@ -1,0 +1,27 @@
+plugins {
+    kotlin("jvm")
+    kotlin("kapt")
+}
+
+dependencies {
+    kapt("com.google.auto.service:auto-service")
+
+    api(kotlin("reflect"))
+    api("com.google.auto.service:auto-service-annotations")
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-core")
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j")
+    api("com.google.inject:guice")
+    api("com.github.ajalt.clikt:clikt")
+    api("com.typesafe:config")
+    api("org.slf4j:slf4j-api")
+    api("io.micrometer:micrometer-core")
+    api("io.opentelemetry:opentelemetry-api")
+    api("io.opentelemetry:opentelemetry-extension-kotlin")
+
+    implementation("ch.qos.logback:logback-core")
+    implementation("ch.qos.logback:logback-classic")
+    implementation("org.apache.logging.log4j:log4j-to-slf4j")
+    implementation("org.slf4j:jul-to-slf4j")
+    implementation("org.codehaus.janino:janino")
+    implementation("net.logstash.logback:logstash-logback-encoder")
+}
