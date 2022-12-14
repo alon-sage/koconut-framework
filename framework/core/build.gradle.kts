@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm")
     kotlin("kapt")
+    id("koconut-publish-java-github")
 }
 
 dependencies {
