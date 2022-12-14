@@ -1,4 +1,4 @@
-# KoCoNut
+# Koconut
 
 KoCoNut is an application framework which:
 
