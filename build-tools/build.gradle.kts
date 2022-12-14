@@ -11,8 +11,8 @@ repositories {
 }
 
 dependencies {
-    implementation(enforcedPlatform(project(":dependencies-bom")))
-    implementation(kotlin("gradle-plugin"))
+    api(platform(kotlin("bom", "1.7.22")))
+    api(kotlin("gradle-plugin", "1.7.22"))
 }
 
 tasks.withType<KotlinCompile> {

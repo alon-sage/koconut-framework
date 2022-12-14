@@ -1,12 +1,11 @@
 plugins {
     kotlin("jvm")
     kotlin("kapt")
-    id("koconut-publish-java-github")
+    id("dev.koconut.build.conventions")
+    id("dev.koconut.build.publish-github-maven")
 }
 
 dependencies {
-    kapt("com.google.auto.service:auto-service")
-
     api(kotlin("reflect"))
     api("com.google.auto.service:auto-service-annotations")
     api("org.jetbrains.kotlinx:kotlinx-coroutines-core")
@@ -25,4 +24,10 @@ dependencies {
     implementation("org.slf4j:jul-to-slf4j")
     implementation("org.codehaus.janino:janino")
     implementation("net.logstash.logback:logstash-logback-encoder")
+}
+
+publishing {
+    publications.register<MavenPublication>("jar") {
+        from(components["java"])
+    }
 }

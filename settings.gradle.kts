@@ -1,8 +1,8 @@
 rootProject.name = "koconut-framework"
 
-includeBuild("gradle-plugins")
+includeBuild("build-tools")
 
-include("dependencies-bom")
-
-include("framework")
-include("framework:core")
+include("koconut-dependencies")
+include("koconut-core")
+include("koconut-bom")
+include("koconut-gradle-plugin")
