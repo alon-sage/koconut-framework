@@ -20,7 +20,7 @@ tasks.validatePlugins {
 val bomSpec = provider {
     project(":koconut-bom")
         .publishing
-        .publications["pom"]
+        .publications["javaPlatform"]
         .let { it as MavenPublication }
         .run { "$groupId:$artifactId:$version" }
 }

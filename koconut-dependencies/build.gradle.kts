@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.plugin.getKotlinPluginVersion
+
 plugins {
     `java-platform`
     id("dev.koconut.build.publish-github-maven")
@@ -8,16 +10,16 @@ javaPlatform {
 }
 
 dependencies {
-    api(enforcedPlatform("org.jetbrains.kotlin:kotlin-bom:1.7.22"))
-    api(enforcedPlatform("org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.6.4"))
-    api(enforcedPlatform("com.google.inject:guice-bom:5.1.0"))
-    api(enforcedPlatform("io.netty:netty-bom:4.1.85.Final"))
-    api(enforcedPlatform("org.apache.logging.log4j:log4j-bom:2.19.0"))
-    api(enforcedPlatform("com.fasterxml.jackson:jackson-bom:2.14.1"))
-    api(enforcedPlatform("io.micrometer:micrometer-bom:1.10.2"))
-    api(enforcedPlatform("io.opentelemetry:opentelemetry-bom:1.20.1"))
-    api(enforcedPlatform("org.testcontainers:testcontainers-bom:1.17.6"))
-    api(enforcedPlatform("org.junit:junit-bom:5.9.1"))
+    api(platform("org.jetbrains.kotlin:kotlin-bom:${getKotlinPluginVersion()}"))
+    api(platform("org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.6.4"))
+    api(platform("com.google.inject:guice-bom:5.1.0"))
+    api(platform("io.netty:netty-bom:4.1.85.Final"))
+    api(platform("org.apache.logging.log4j:log4j-bom:2.19.0"))
+    api(platform("com.fasterxml.jackson:jackson-bom:2.14.1"))
+    api(platform("io.micrometer:micrometer-bom:1.10.2"))
+    api(platform("io.opentelemetry:opentelemetry-bom:1.20.1"))
+    api(platform("org.testcontainers:testcontainers-bom:1.17.6"))
+    api(platform("org.junit:junit-bom:5.9.1"))
 
     constraints {
         api("com.google.auto.service:auto-service-annotations:1.0.1")
@@ -43,13 +45,8 @@ dependencies {
     }
 }
 
-tasks.withType<GenerateModuleMetadata> {
-    @Suppress("UnstableApiUsage")
-    suppressedValidationErrors.add("enforced-platform")
-}
-
 publishing {
-    publications.register<MavenPublication>("pom") {
+    publications.register<MavenPublication>("javaPlatform") {
         from(components["javaPlatform"])
     }
 }

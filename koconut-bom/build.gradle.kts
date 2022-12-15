@@ -15,7 +15,7 @@ dependencies {
 }
 
 publishing {
-    publications.register<MavenPublication>("pom") {
+    publications.register<MavenPublication>("javaPlatform") {
         from(components["javaPlatform"])
     }
 }
