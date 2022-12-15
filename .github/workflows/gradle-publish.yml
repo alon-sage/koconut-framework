@@ -34,13 +34,6 @@ jobs:
         with:
           arguments: build --stacktrace
 
-      - name: Publish Plugins to GitHub Packages
-        uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
-        with:
-          arguments: :koconut-gradle-plugin:publish --stacktrace
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Publish to GitHub Packages
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
         with:
