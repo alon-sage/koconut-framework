@@ -17,6 +17,7 @@ dependencies {
     api(enforcedPlatform("io.micrometer:micrometer-bom:1.10.2"))
     api(enforcedPlatform("io.opentelemetry:opentelemetry-bom:1.20.1"))
     api(enforcedPlatform("org.testcontainers:testcontainers-bom:1.17.6"))
+    api(enforcedPlatform("org.junit:junit-bom:5.9.1"))
 
     constraints {
         api("com.google.auto.service:auto-service-annotations:1.0.1")

@@ -11,8 +11,8 @@ repositories {
 }
 
 dependencies {
-    api(platform(kotlin("bom", "1.7.22")))
-    api(kotlin("gradle-plugin", "1.7.22"))
+    api(platform("org.jetbrains.kotlin:kotlin-bom:1.7.22"))
+    api("org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.22")
 }
 
 tasks.withType<KotlinCompile> {

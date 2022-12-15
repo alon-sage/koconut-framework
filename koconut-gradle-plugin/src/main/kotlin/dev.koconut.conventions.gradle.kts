@@ -19,9 +19,9 @@ with(project.dependencies) {
             }
 
             "testImplementation" -> withDependencies {
-                add(create(kotlin("test")))
-                add(create("io.mockk:mockk"))
+                add(create("org.jetbrains.kotlin:kotlin-test"))
                 add(create("org.spekframework.spek2:spek-dsl-jvm"))
+                add(create("io.mockk:mockk"))
             }
 
             "testRuntimeOnly" -> withDependencies {
