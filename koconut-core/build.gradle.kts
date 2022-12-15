@@ -7,7 +7,6 @@ plugins {
 
 dependencies {
     api("org.jetbrains.kotlin:kotlin-reflect")
-    api("com.google.auto.service:auto-service-annotations")
     api("org.jetbrains.kotlinx:kotlinx-coroutines-core")
     api("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j")
     api("com.google.inject:guice")

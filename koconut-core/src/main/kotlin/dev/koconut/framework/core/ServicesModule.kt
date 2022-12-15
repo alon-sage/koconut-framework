@@ -38,20 +38,20 @@ class ServicesModule : AbstractModule() {
 }
 
 fun interface Service {
-    suspend fun start(): Handle
+    suspend fun start(): Disposable
 
-    fun interface Handle {
-        suspend fun stop()
+    fun interface Disposable {
+        suspend fun dispose()
     }
 }
 
 fun interface BlockingService : Service {
-    fun startBlocking(): Handle
-    override suspend fun start(): Service.Handle = withContext(Dispatchers.IO) { startBlocking() }
+    fun startBlocking(): Disposable
+    override suspend fun start(): Service.Disposable = withContext(Dispatchers.IO) { startBlocking() }
 
-    fun interface Handle : Service.Handle {
-        fun stopBlocking()
-        override suspend fun stop() = withContext(Dispatchers.IO) { stopBlocking() }
+    fun interface Disposable : Service.Disposable {
+        fun disposeBlocking()
+        override suspend fun dispose() = withContext(Dispatchers.IO) { disposeBlocking() }
     }
 }
 
@@ -73,7 +73,7 @@ class DefaultServiceGroup(
     ): T = supervisorScope {
         var capturedThrowable: Throwable? = null
 
-        val handles = services
+        val disposables = services
             .map { kotlin.runCatching { it.start() } }
             .onEach { if (it.isFailure) capturedThrowable = it.exceptionOrNull() }
             .takeWhile { it.isSuccess }
@@ -82,7 +82,11 @@ class DefaultServiceGroup(
 
         suspend fun stopServices() {
             try {
-                withContext(NonCancellable) { withTimeout(gracefulShutdownMillis) { handles.forEach { it.stop() } } }
+                withContext(NonCancellable) {
+                    withTimeout(gracefulShutdownMillis) {
+                        disposables.forEach { it.dispose() }
+                    }
+                }
             } catch (e: Exception) {
                 cancel("Graceful shutdown failed", e)
             }

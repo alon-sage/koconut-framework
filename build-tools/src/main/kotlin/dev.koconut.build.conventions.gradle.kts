@@ -5,24 +5,28 @@ repositories {
     mavenCentral()
 }
 
-with(project.dependencies) {
+with(dependencies) {
     configurations.all {
         withDependencies {
             add(platform(project(":koconut-dependencies")))
         }
         when (name) {
-            "kapt" -> withDependencies {
-                add(create("com.google.auto.service:auto-service"))
+            "kapt" -> {
+                add(name, "com.google.auto.service:auto-service")
             }
 
-            "testImplementation" -> withDependencies {
-                add(create("org.jetbrains.kotlin:kotlin-test"))
-                add(create("io.mockk:mockk"))
-                add(create("org.spekframework.spek2:spek-dsl-jvm"))
+            "compileOnly" -> {
+                add(name, "com.google.auto.service:auto-service-annotations")
+            }
+
+            "testImplementation" -> {
+                add(name, "org.jetbrains.kotlin:kotlin-test")
+                add(name, "org.spekframework.spek2:spek-dsl-jvm")
+                add(name, "io.mockk:mockk")
             }
 
             "testRuntimeOnly" -> withDependencies {
-                add(create("org.spekframework.spek2:spek-runner-junit5"))
+                add(name, "org.spekframework.spek2:spek-runner-junit5")
             }
         }
     }
