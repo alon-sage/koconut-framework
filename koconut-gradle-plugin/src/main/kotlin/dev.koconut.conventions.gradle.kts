@@ -1,3 +1,4 @@
+import dev.koconut.framework.asm.MainClassFinder
 import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
 import org.jetbrains.kotlin.gradle.utils.loadPropertyFromResources
@@ -53,4 +54,21 @@ tasks.withType<Test> {
     reports {
         junitXml.required.set(true)
     }
+}
+
+val mainClassProvider = provider {
+    extensions
+        .getByType<SourceSetContainer>()
+        .getByName(SourceSet.MAIN_SOURCE_SET_NAME)
+        .output
+        .filter { it.isDirectory }
+        .files
+        .flatMap { MainClassFinder.mainClasses(it) }
+        .singleOrNull()
+}
+
+afterEvaluate {
+    extensions
+        .findByType<JavaApplication>()
+        ?.apply { mainClass.convention(mainClassProvider) }
 }
