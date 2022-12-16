@@ -56,7 +56,7 @@ tasks.withType<Test> {
     }
 }
 
-val mainClassProvider = provider {
+val resolvedMainClass by lazy {
     extensions
         .getByType<SourceSetContainer>()
         .getByName(SourceSet.MAIN_SOURCE_SET_NAME)
@@ -70,5 +70,13 @@ val mainClassProvider = provider {
 afterEvaluate {
     extensions
         .findByType<JavaApplication>()
-        ?.apply { mainClass.convention(mainClassProvider) }
+        ?.apply { mainClass.convention(resolvedMainClass) }
+
+    resolvedMainClass?.let { mainClass ->
+        tasks.named<Jar>("jar") {
+            manifest {
+                attributes("Main-Class" to mainClass)
+            }
+        }
+    }
 }
