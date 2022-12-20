@@ -98,7 +98,7 @@ to the folder where you have the project files. We can build and run the
 application by issuing the following command:
 
 ```shell
-./gradlew run --args serve  --quite
+./gradlew run --args serve --quite
 ```
 
 You should see some output that looks very similar to this:
