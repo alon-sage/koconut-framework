@@ -4,5 +4,7 @@ includeBuild("build-tools")
 
 include("koconut-dependencies")
 include("koconut-core")
+include("koconut-ktor-server")
+include("koconut-ktor-server-test")
 include("koconut-bom")
 include("koconut-gradle-plugin")

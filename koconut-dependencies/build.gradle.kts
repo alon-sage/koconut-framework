@@ -16,6 +16,7 @@ dependencies {
     api(platform("io.netty:netty-bom:4.1.85.Final"))
     api(platform("org.apache.logging.log4j:log4j-bom:2.19.0"))
     api(platform("com.fasterxml.jackson:jackson-bom:2.14.1"))
+    api(platform("io.ktor:ktor-bom:2.2.1"))
     api(platform("io.micrometer:micrometer-bom:1.10.2"))
     api(platform("io.opentelemetry:opentelemetry-bom:1.20.1"))
     api(platform("org.testcontainers:testcontainers-bom:1.17.6"))
