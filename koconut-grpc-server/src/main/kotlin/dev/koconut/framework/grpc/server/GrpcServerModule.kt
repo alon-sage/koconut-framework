@@ -17,6 +17,7 @@ import io.grpc.InsecureServerCredentials
 import io.grpc.Server
 import io.grpc.ServerBuilder
 import io.grpc.ServerInterceptor
+import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder
 import io.grpc.protobuf.services.ProtoReflectionService
 import io.grpc.stub.StreamObserver
 import io.grpc.xds.XdsServerBuilder
@@ -44,10 +45,14 @@ class GrpcServerModule : AbstractModule() {
     @Provides
     @Singleton
     fun provideXdsServerBuilder(properties: GrpcServerProperties): ServerBuilder<*> =
-        XdsServerBuilder.forPort(
-            properties.port,
-            XdsServerCredentials.create(InsecureServerCredentials.create())
-        )
+        if (properties.xds) {
+            XdsServerBuilder.forPort(
+                properties.port,
+                XdsServerCredentials.create(InsecureServerCredentials.create())
+            )
+        } else {
+            NettyServerBuilder.forPort(properties.port)
+        }
 
     @Provides
     @Singleton
@@ -85,6 +90,7 @@ class GrpcServerModule : AbstractModule() {
 
 data class GrpcServerProperties(
     val port: Int,
+    val xds: Boolean,
     val gracefulShutdownMillis: Long,
     val enableReflection: Boolean
 )
