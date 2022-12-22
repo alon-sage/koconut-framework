@@ -12,13 +12,16 @@ import dev.koconut.framework.core.Service
 import dev.koconut.framework.core.config.ConfigBeans
 import dev.koconut.framework.core.config.configBean
 import io.grpc.BindableService
+import io.grpc.InsecureServerCredentials
 import io.grpc.Server
 import io.grpc.ServerBuilder
 import io.grpc.protobuf.services.ProtoReflectionService
 import io.grpc.stub.StreamObserver
 import io.grpc.xds.XdsServerBuilder
+import io.grpc.xds.XdsServerCredentials
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.channels.trySendBlocking
+import kotlinx.coroutines.flow.Flow
 import org.slf4j.LoggerFactory
 import java.util.concurrent.TimeUnit
 
@@ -38,7 +41,10 @@ class GrpcServerModule : AbstractModule() {
     @Provides
     @Singleton
     fun provideXdsServerBuilder(properties: GrpcServerProperties): ServerBuilder<*> =
-        XdsServerBuilder.forPort(properties.port)
+        XdsServerBuilder.forPort(
+            properties.port,
+            XdsServerCredentials.create(InsecureServerCredentials.create())
+        )
 
     @Provides
     @Singleton
@@ -91,4 +97,12 @@ fun <V> SendChannel<V>.streamObserver(): StreamObserver<V> =
         override fun onCompleted() {
             close()
         }
+    }
+
+suspend fun <V> Flow<V>.collect(streamObserver: StreamObserver<V>) =
+    try {
+        collect { streamObserver.onNext(it) }
+        streamObserver.onCompleted()
+    } catch (throwable: Throwable) {
+        streamObserver.onError(throwable)
     }
