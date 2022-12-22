@@ -22,6 +22,7 @@ dependencies {
         api(project(":koconut-ktor-server"))
         api(project(":koconut-ktor-server-test"))
         api(project(":koconut-grpc-server"))
+        api(project(":koconut-grpc-server-test"))
     }
 }
 

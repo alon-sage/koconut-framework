@@ -61,6 +61,13 @@ interface ServiceGroup {
         registerShutdownHook: Boolean = true,
         block: suspend () -> T
     ): T
+
+    fun <T> useBlocking(
+        gracefulShutdownMillis: Long = 30_000L,
+        registerShutdownHook: Boolean = true,
+        block: suspend () -> T
+    ): T =
+        runBlocking { use(gracefulShutdownMillis, registerShutdownHook, block) }
 }
 
 class DefaultServiceGroup(
@@ -132,7 +139,7 @@ class ServeCommand(
 
     override fun run() {
         try {
-            runBlocking { serviceGroup.use { awaitCancellation() } }
+            serviceGroup.useBlocking { awaitCancellation() }
         } catch (e: Exception) {
             logger.error("Application failed", e)
         }

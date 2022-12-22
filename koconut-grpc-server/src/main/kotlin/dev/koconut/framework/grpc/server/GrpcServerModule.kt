@@ -15,6 +15,10 @@ import io.grpc.BindableService
 import io.grpc.Server
 import io.grpc.ServerBuilder
 import io.grpc.protobuf.services.ProtoReflectionService
+import io.grpc.stub.StreamObserver
+import io.grpc.xds.XdsServerBuilder
+import kotlinx.coroutines.channels.SendChannel
+import kotlinx.coroutines.channels.trySendBlocking
 import org.slf4j.LoggerFactory
 import java.util.concurrent.TimeUnit
 
@@ -33,9 +37,17 @@ class GrpcServerModule : AbstractModule() {
 
     @Provides
     @Singleton
-    fun provideGrpcServer(properties: GrpcServerProperties, services: Set<BindableService>): Server =
-        ServerBuilder
-            .forPort(properties.port)
+    fun provideXdsServerBuilder(properties: GrpcServerProperties): ServerBuilder<*> =
+        XdsServerBuilder.forPort(properties.port)
+
+    @Provides
+    @Singleton
+    fun provideGrpcServer(
+        serverBuilder: ServerBuilder<*>,
+        properties: GrpcServerProperties,
+        services: Set<BindableService>
+    ): Server =
+        serverBuilder
             .let { services.fold(it) { builder, service -> builder.addService(service) } }
             .let { if (properties.enableReflection) it.addService(ProtoReflectionService.newInstance()) else it }
             .build()
@@ -65,3 +77,18 @@ data class GrpcServerProperties(
     val gracefulShutdownMillis: Long,
     val enableReflection: Boolean
 )
+
+fun <V> SendChannel<V>.streamObserver(): StreamObserver<V> =
+    object : StreamObserver<V> {
+        override fun onNext(value: V) {
+            trySendBlocking(value).getOrThrow()
+        }
+
+        override fun onError(t: Throwable) {
+            close(t)
+        }
+
+        override fun onCompleted() {
+            close()
+        }
+    }

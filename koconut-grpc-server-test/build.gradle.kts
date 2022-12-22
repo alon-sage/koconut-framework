@@ -9,10 +9,7 @@ dependencies {
     api(project(":koconut-core"))
     api("io.grpc:grpc-api")
 
-    implementation("io.grpc:grpc-xds")
-    implementation("io.grpc:grpc-services")
-
-    testImplementation(project(":koconut-grpc-server-test"))
+    implementation("io.grpc:grpc-core")
 }
 
 publishing {
