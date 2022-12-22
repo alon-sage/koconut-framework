@@ -8,7 +8,7 @@ val jibJavaAgent by configurations.creating {
 }
 
 jib {
-    to { image = "${findProperty("jib.to.registry.url") ?: ""}${project.name}:${project.version}" }
+    to { image = project.name }
 }
 
 afterEvaluate {
