@@ -11,10 +11,12 @@ import dev.koconut.framework.core.BlockingService
 import dev.koconut.framework.core.Service
 import dev.koconut.framework.core.config.ConfigBeans
 import dev.koconut.framework.core.config.configBean
+import dev.koconut.framework.core.ordered
 import io.grpc.BindableService
 import io.grpc.InsecureServerCredentials
 import io.grpc.Server
 import io.grpc.ServerBuilder
+import io.grpc.ServerInterceptor
 import io.grpc.protobuf.services.ProtoReflectionService
 import io.grpc.stub.StreamObserver
 import io.grpc.xds.XdsServerBuilder
@@ -30,6 +32,7 @@ class GrpcServerModule : AbstractModule() {
     private val logger = LoggerFactory.getLogger(javaClass)
 
     override fun configure() {
+        Multibinder.newSetBinder(binder(), ServerInterceptor::class.java)
         Multibinder.newSetBinder(binder(), BindableService::class.java)
     }
 
@@ -51,10 +54,12 @@ class GrpcServerModule : AbstractModule() {
     fun provideGrpcServer(
         serverBuilder: ServerBuilder<*>,
         properties: GrpcServerProperties,
+        interceptors: Set<ServerInterceptor>,
         services: Set<BindableService>
     ): Server =
         serverBuilder
-            .let { services.fold(it) { builder, service -> builder.addService(service) } }
+            .let { interceptors.ordered().fold(it) { builder, service -> builder.intercept(service) } }
+            .let { services.ordered().fold(it) { builder, service -> builder.addService(service) } }
             .let { if (properties.enableReflection) it.addService(ProtoReflectionService.newInstance()) else it }
             .build()
 
