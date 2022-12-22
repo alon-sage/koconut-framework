@@ -16,6 +16,8 @@ dependencies {
     api(platform("io.netty:netty-bom:4.1.85.Final"))
     api(platform("org.apache.logging.log4j:log4j-bom:2.19.0"))
     api(platform("com.fasterxml.jackson:jackson-bom:2.14.1"))
+    api(platform("com.google.protobuf:protobuf-bom:3.21.12"))
+    api(platform("io.grpc:grpc-bom:1.51.1"))
     api(platform("io.ktor:ktor-bom:2.2.1"))
     api(platform("io.micrometer:micrometer-bom:1.10.2"))
     api(platform("io.opentelemetry:opentelemetry-bom:1.20.1"))
@@ -43,6 +45,10 @@ dependencies {
         api("org.spekframework.spek2:spek-dsl-jvm:2.0.19")
         api("org.spekframework.spek2:spek-runner-junit5:2.0.19")
         api("io.mockk:mockk:1.13.3")
+
+        api("com.google.protobuf:protoc:3.21.12")
+        api("io.grpc:protoc-gen-grpc-kotlin:1.3.0")
+        api("com.google.protobuf:protobuf-gradle-plugin:0.9.1")
     }
 }
 
