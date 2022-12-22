@@ -1,4 +1,4 @@
-import dev.koconut.framework.asm.MainClassFinder
+import dev.koconut.gradle.asm.MainClassFinder
 import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
 import org.jetbrains.kotlin.gradle.utils.loadPropertyFromResources

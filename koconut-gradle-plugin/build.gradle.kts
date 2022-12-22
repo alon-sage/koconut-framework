@@ -12,6 +12,7 @@ repositories {
 dependencies {
     api("org.jetbrains.kotlin:kotlin-gradle-plugin")
     api("com.google.protobuf:protobuf-gradle-plugin")
+    api("com.google.cloud.tools:jib-gradle-plugin")
 }
 
 tasks.validatePlugins {

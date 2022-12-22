@@ -51,6 +51,10 @@ dependencies {
         api("io.grpc:grpc-kotlin-stub:1.3.0")
         api("io.grpc:protoc-gen-grpc-kotlin:1.3.0")
         api("com.google.protobuf:protobuf-gradle-plugin:0.9.1")
+
+        api("com.google.cloud.tools:jib-gradle-plugin:3.3.1")
+
+        api("io.opentelemetry.javaagent:opentelemetry-javaagent:1.21.0")
     }
 }
 

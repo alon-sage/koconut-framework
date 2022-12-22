@@ -1,4 +1,4 @@
-package dev.koconut.framework.asm
+package dev.koconut.gradle.asm
 
 import org.jetbrains.org.objectweb.asm.ClassReader
 import org.jetbrains.org.objectweb.asm.ClassVisitor
