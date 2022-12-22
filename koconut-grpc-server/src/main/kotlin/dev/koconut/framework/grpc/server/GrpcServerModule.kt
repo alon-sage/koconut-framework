@@ -46,10 +46,7 @@ class GrpcServerModule : AbstractModule() {
     @Singleton
     fun provideXdsServerBuilder(properties: GrpcServerProperties): ServerBuilder<*> =
         if (properties.xds) {
-            XdsServerBuilder.forPort(
-                properties.port,
-                XdsServerCredentials.create(InsecureServerCredentials.create())
-            )
+            XdsServerBuilder.forPort(properties.port, XdsServerCredentials.create(InsecureServerCredentials.create()))
         } else {
             NettyServerBuilder.forPort(properties.port)
         }
