@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit
 
 @AutoService(Module::class)
 class GrpcServerModule : AbstractModule() {
-    private val logger = LoggerFactory.getLogger(GrpcServerModule::class.java)
+    private val logger = LoggerFactory.getLogger(javaClass)
 
     override fun configure() {
         Multibinder.newSetBinder(binder(), BindableService::class.java)

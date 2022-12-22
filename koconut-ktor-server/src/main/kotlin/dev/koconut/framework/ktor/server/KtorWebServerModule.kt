@@ -21,6 +21,7 @@ import io.ktor.server.config.ApplicationConfig
 import io.ktor.server.config.HoconApplicationConfig
 import io.ktor.server.engine.ApplicationEngine
 import io.ktor.server.engine.ApplicationEngineEnvironment
+import io.ktor.server.engine.ConnectorType
 import io.ktor.server.engine.applicationEngineEnvironment
 import io.ktor.server.engine.connector
 import io.ktor.server.engine.sslConnector
@@ -28,6 +29,7 @@ import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.routing.*
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.io.FileInputStream
@@ -35,6 +37,7 @@ import java.security.KeyStore
 
 @AutoService(Module::class)
 class KtorWebServerModule : AbstractModule() {
+    private val logger = LoggerFactory.getLogger(javaClass)
 
     override fun configure() {
         Multibinder.newSetBinder(binder(), WebServerConfigurer::class.java)
@@ -64,7 +67,7 @@ class KtorWebServerModule : AbstractModule() {
         configurers: Set<WebServerConfigurer>
     ): ApplicationEngineEnvironment =
         applicationEngineEnvironment {
-            log = LoggerFactory.getLogger(KtorWebServerModule::class.java)
+            log = logger
             config = applicationConfig
 
             @OptIn(DelicateCoroutinesApi::class)
@@ -104,8 +107,27 @@ class KtorWebServerModule : AbstractModule() {
         applicationEngine: ApplicationEngine
     ): Service =
         BlockingService {
+            logger.info("Starting Ktor server...")
             applicationEngine.start(wait = true)
-            BlockingService.Disposable { applicationEngine.stop() }
+            logger.info("Ktor server started")
+
+            applicationEngine.environment.connectors.forEach { connector ->
+                when (connector.type) {
+                    ConnectorType.HTTP -> URLProtocol.HTTP
+                    ConnectorType.HTTPS -> URLProtocol.HTTPS
+                    else -> null
+                }
+                    ?.let { protocol -> URLBuilder(protocol, connector.host, connector.port) }
+                    ?.appendPathSegments(applicationEngine.environment.rootPath)
+                    ?.buildString()
+                    ?.let { url -> logger.info("Ktor is listening on $url") }
+            }
+
+            BlockingService.Disposable {
+                logger.info("Terminating Ktor server gracefully...")
+                applicationEngine.stop()
+                logger.info("Ktor server terminated")
+            }
         }
 }
 
