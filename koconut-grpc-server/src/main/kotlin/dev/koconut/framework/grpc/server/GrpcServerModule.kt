@@ -18,6 +18,7 @@ import io.grpc.Server
 import io.grpc.ServerBuilder
 import io.grpc.ServerInterceptor
 import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder
+import io.grpc.protobuf.services.HealthStatusManager
 import io.grpc.protobuf.services.ProtoReflectionService
 import io.grpc.stub.StreamObserver
 import io.grpc.xds.XdsServerBuilder
@@ -53,21 +54,32 @@ class GrpcServerModule : AbstractModule() {
 
     @Provides
     @Singleton
+    fun provideHealthStatusManager(): HealthStatusManager =
+        HealthStatusManager()
+
+    @Provides
+    @Singleton
     fun provideGrpcServer(
         serverBuilder: ServerBuilder<*>,
         properties: GrpcServerProperties,
         interceptors: Set<ServerInterceptor>,
-        services: Set<BindableService>
+        services: Set<BindableService>,
+        healthStatusManager: HealthStatusManager
     ): Server =
         serverBuilder
             .let { interceptors.ordered().fold(it) { builder, service -> builder.intercept(service) } }
             .let { services.ordered().fold(it) { builder, service -> builder.addService(service) } }
             .let { if (properties.enableReflection) it.addService(ProtoReflectionService.newInstance()) else it }
+            .addService(healthStatusManager.healthService)
             .build()
 
     @ProvidesIntoSet
     @Singleton
-    fun provideGrpcService(properties: GrpcServerProperties, server: Server): Service =
+    fun provideGrpcService(
+        properties: GrpcServerProperties,
+        server: Server,
+        healthStatusManager: HealthStatusManager
+    ): Service =
         BlockingService {
             logger.info("Starting GRPC server...")
             server.start()
@@ -75,6 +87,7 @@ class GrpcServerModule : AbstractModule() {
 
             BlockingService.Disposable {
                 logger.info("Terminating GRPC server gracefully...")
+                healthStatusManager.enterTerminalState()
                 server.shutdown()
                 if (!server.awaitTermination(properties.gracefulShutdownMillis, TimeUnit.MILLISECONDS)) {
                     logger.info("Force GRPC server termination")
