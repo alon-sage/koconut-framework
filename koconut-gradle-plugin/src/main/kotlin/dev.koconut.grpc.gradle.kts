@@ -15,10 +15,10 @@ dependencies {
 val koconutBom = dependencies.platform(loadPropertyFromResources("bom-spec.properties", "koconut-bom"))
 val protoc = dependencies.create("com.google.protobuf", "protoc")
 val protocGrpc = dependencies.create("io.grpc", "protoc-gen-grpc-java")
-val protocGrpcKt = dependencies.create("io.grpc", "protoc-gen-grpc-kotlin")
+val protocGrpcKotlin = dependencies.create("io.grpc", "protoc-gen-grpc-kotlin")
 
-val protobufArtifacts = configurations
-    .detachedConfiguration(koconutBom, protoc, protocGrpc, protocGrpcKt)
+val protobufArtifacts: Set<ResolvedDependency> = configurations
+    .detachedConfiguration(koconutBom, protoc, protocGrpc, protocGrpcKotlin)
     .resolvedConfiguration
     .firstLevelModuleDependencies
 
@@ -30,14 +30,14 @@ protobuf {
         create("grpc") {
             artifact = protobufArtifacts.single { it.module.id.module == protocGrpc.module }.name
         }
-        create("grpckt") {
-            artifact = protobufArtifacts.single { it.module.id.module == protocGrpcKt.module }.name + ":jdk8@jar"
+        create("grpcKotlin") {
+            artifact = protobufArtifacts.single { it.module.id.module == protocGrpcKotlin.module }.name + ":jdk8@jar"
         }
     }
     generateProtoTasks.all().configureEach {
         plugins {
             create("grpc")
-            create("grpckt")
+            create("grpcKotlin")
         }
         builtins {
             create("kotlin")
