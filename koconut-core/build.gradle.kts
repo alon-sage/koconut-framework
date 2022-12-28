@@ -21,8 +21,6 @@ dependencies {
     implementation("ch.qos.logback:logback-classic")
     implementation("org.apache.logging.log4j:log4j-to-slf4j")
     implementation("org.slf4j:jul-to-slf4j")
-    implementation("org.codehaus.janino:janino")
-    implementation("net.logstash.logback:logstash-logback-encoder")
 }
 
 publishing {
