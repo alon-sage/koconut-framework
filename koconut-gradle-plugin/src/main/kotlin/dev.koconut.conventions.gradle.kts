@@ -69,6 +69,13 @@ val resolvedMainClass by lazy {
 
 afterEvaluate {
     extensions
+        .findByType<JavaPluginExtension>()
+        ?.apply {
+            targetCompatibility = JavaVersion.VERSION_11
+            sourceCompatibility = JavaVersion.VERSION_11
+        }
+
+    extensions
         .findByType<JavaApplication>()
         ?.apply { mainClass.convention(resolvedMainClass) }
 
