@@ -73,6 +73,9 @@ afterEvaluate {
         ?.apply {
             targetCompatibility = JavaVersion.VERSION_11
             sourceCompatibility = JavaVersion.VERSION_11
+            toolchain {
+                languageVersion.set(JavaLanguageVersion.of(11))
+            }
         }
 
     extensions
