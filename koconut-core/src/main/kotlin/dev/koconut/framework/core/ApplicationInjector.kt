@@ -72,3 +72,6 @@ inline fun <reified T> Injector.getInstance(annotationClass: KClass<out Annotati
     val key = Key.get(typeLiteral, annotationClass.java)
     return getInstance(key) as T
 }
+
+inline fun <reified T> typeLiteralOf(): TypeLiteral<T> =
+    object : TypeLiteral<T>() {}

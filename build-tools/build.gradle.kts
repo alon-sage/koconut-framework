@@ -11,14 +11,14 @@ repositories {
 }
 
 dependencies {
-    api(platform("org.jetbrains.kotlin:kotlin-bom:1.7.22"))
-    api("org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.22")
+    api(platform("org.jetbrains.kotlin:kotlin-bom:1.8.0"))
+    api("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0")
 }
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "1.8"
         allWarningsAsErrors = true
-        freeCompilerArgs = listOf("-Xjsr305=strict")
+        freeCompilerArgs = listOf("-Xjsr305=strict", "-java-parameters", "-Xjvm-default=all")
     }
 }
