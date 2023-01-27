@@ -8,6 +8,7 @@ plugins {
 dependencies {
     api("org.jetbrains.kotlin:kotlin-reflect")
     api("org.jetbrains.kotlinx:kotlinx-coroutines-core")
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8")
     api("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j")
     api("com.google.inject:guice")
     api("com.github.ajalt.clikt:clikt")
