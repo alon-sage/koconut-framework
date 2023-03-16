@@ -4,10 +4,6 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompilerOptions
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 import org.jetbrains.kotlin.gradle.utils.loadPropertyFromResources
 
-repositories {
-    mavenCentral()
-}
-
 val koconutBomSpec = loadPropertyFromResources("bom-spec.properties", "koconut-bom")
 
 with(dependencies) {

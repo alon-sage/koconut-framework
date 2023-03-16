@@ -1,5 +1,4 @@
 import com.google.protobuf.gradle.ProtobufExtension
-import org.gradle.kotlin.dsl.findByType
 import org.jetbrains.kotlin.gradle.utils.loadPropertyFromResources
 
 plugins {
@@ -28,29 +27,28 @@ val protobufArtifacts: Set<ResolvedDependency> = configurations
     .resolvedConfiguration
     .firstLevelModuleDependencies
 
-afterEvaluate {
-    extensions
-        .findByType<ProtobufExtension>()
-        ?.apply {
-            protoc {
-                artifact = protobufArtifacts.single { it.module.id.module == protoc.module }.name
+beforeEvaluate {
+    configure<ProtobufExtension> {
+        protoc {
+            artifact = protobufArtifacts.single { it.module.id.module == protoc.module }.name
+        }
+        plugins {
+            create("grpc") {
+                artifact = protobufArtifacts.single { it.module.id.module == protocGrpc.module }.name
             }
-            plugins {
-                create("grpc") {
-                    artifact = protobufArtifacts.single { it.module.id.module == protocGrpc.module }.name
-                }
-                create("grpcKotlin") {
-                    artifact = protobufArtifacts.single { it.module.id.module == protocGrpcKotlin.module }.name + ":jdk8@jar"
-                }
-            }
-            generateProtoTasks.all().configureEach {
-                plugins {
-                    create("grpc")
-                    create("grpcKotlin")
-                }
-                builtins {
-                    create("kotlin")
-                }
+            create("grpcKotlin") {
+                artifact =
+                    protobufArtifacts.single { it.module.id.module == protocGrpcKotlin.module }.name + ":jdk8@jar"
             }
         }
+        generateProtoTasks.all().configureEach {
+            plugins {
+                create("grpc")
+                create("grpcKotlin")
+            }
+            builtins {
+                create("kotlin")
+            }
+        }
+    }
 }
