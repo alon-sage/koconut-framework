@@ -27,7 +27,7 @@ val protobufArtifacts: Set<ResolvedDependency> = configurations
     .resolvedConfiguration
     .firstLevelModuleDependencies
 
-beforeEvaluate {
+afterEvaluate {
     configure<ProtobufExtension> {
         protoc {
             artifact = protobufArtifacts.single { it.module.id.module == protoc.module }.name
