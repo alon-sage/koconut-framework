@@ -1,5 +1,6 @@
-import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
-import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompilerOptions
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 repositories {
     mavenCentral()
@@ -32,16 +33,16 @@ with(dependencies) {
     }
 }
 
-tasks.withType<KotlinCompile<*>> {
-    kotlinOptions {
-        allWarningsAsErrors = true
-        freeCompilerArgs = listOf("-Xjsr305=strict")
+tasks.withType<KotlinCompilationTask<*>> {
+    compilerOptions {
+        allWarningsAsErrors.set(true)
+        freeCompilerArgs.set(listOf("-Xjsr305=strict", "-java-parameters", "-Xjvm-default=all"))
     }
 }
 
-tasks.withType<KotlinCompile<KotlinJvmOptions>> {
-    kotlinOptions {
-        jvmTarget = "11"
+tasks.withType<KotlinCompilationTask<KotlinJvmCompilerOptions>> {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_1_8)
     }
 }
 
@@ -50,4 +51,13 @@ tasks.withType<Test> {
     reports {
         junitXml.required.set(true)
     }
+}
+
+afterEvaluate {
+    extensions
+        .findByType<JavaPluginExtension>()
+        ?.apply {
+            targetCompatibility = JavaVersion.VERSION_1_8
+            sourceCompatibility = JavaVersion.VERSION_1_8
+        }
 }

@@ -39,7 +39,13 @@ class ConfigModule : AbstractModule() {
     @ProvidesIntoSet
     @Singleton
     fun provideSystemEnvironmentOverridesConfigSource(): ConfigSource =
-        OrderedConfigSource(SYSTEM_ENVIRONMENT_CONFIG_PRECEDENCE) { ConfigFactory.systemEnvironmentOverrides() }
+        OrderedConfigSource(SYSTEM_ENVIRONMENT_CONFIG_PRECEDENCE) {
+            try {
+                ConfigFactory.systemEnvironment().getConfig("koconut")
+            } catch (_: ConfigException.Missing) {
+                ConfigFactory.empty()
+            }
+        }
 
     @Provides
     @Singleton

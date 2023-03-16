@@ -10,18 +10,19 @@ import com.google.inject.multibindings.Multibinder
 import com.google.inject.multibindings.ProvidesIntoSet
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigException
-import dev.koconut.framework.core.ordered
 import dev.koconut.framework.core.config.extractors.ArrayConfigExtractor
 import dev.koconut.framework.core.config.extractors.BooleanConfigExtractor
 import dev.koconut.framework.core.config.extractors.ClassConfigExtractor
 import dev.koconut.framework.core.config.extractors.DataClassConfigExtractor
 import dev.koconut.framework.core.config.extractors.DurationConfigExtractor
 import dev.koconut.framework.core.config.extractors.EnumClassConfigExtractor
+import dev.koconut.framework.core.config.extractors.FileConfigExtractor
 import dev.koconut.framework.core.config.extractors.ListConfigExtractor
 import dev.koconut.framework.core.config.extractors.MapConfigExtractor
 import dev.koconut.framework.core.config.extractors.NumberConfigExtractor
 import dev.koconut.framework.core.config.extractors.StringConfigExtractor
 import dev.koconut.framework.core.config.extractors.ValueClassConfigExtractor
+import dev.koconut.framework.core.ordered
 import kotlin.jvm.internal.Reflection
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -58,28 +59,28 @@ class DefaultConfigBeanFactory(
 
     constructor(extractors: Set<ConfigExtractor>) : this(extractors.ordered())
 
-    override fun configBean(config: Config, path: String, beanType: KType): Any? =
+    override fun configBean(config: Config, path: String, beanType: KType): Any? {
         try {
             config.getValue(path)
-            extractors
-                .firstNotNullOfOrNull { extractor ->
-                    try {
-                        extractor.tryExtract(config, path, beanType, this)
-                    } catch (e: ConfigException) {
-                        throw e
-                    } catch (e: Exception) {
-                        throw ConfigException.BugOrBroken("Configuration key '$path' decoding failed.", e)
-                    }
-                }
-                ?: throw ConfigException.BadValue(
-                    config.origin(),
-                    path,
-                    "Configuration key '$path' can not be decoded as $beanType."
-                )
         } catch (e: ConfigException.Missing) {
-            if (beanType.isMarkedNullable) null
-            else throw e
+            if (beanType.isMarkedNullable) return null else throw e
         }
+        return extractors
+            .firstNotNullOfOrNull { extractor ->
+                try {
+                    extractor.tryExtract(config, path, beanType, this)
+                } catch (e: ConfigException) {
+                    throw e
+                } catch (e: Exception) {
+                    throw ConfigException.BugOrBroken("Configuration key '$path' decoding failed.", e)
+                }
+            }
+            ?: throw ConfigException.BadValue(
+                config.origin(),
+                path,
+                "Configuration key '$path' can not be decoded as $beanType."
+            )
+    }
 }
 
 interface ConfigBeans {
@@ -131,6 +132,11 @@ class ConfigBeanModule : AbstractModule() {
     @Singleton
     fun provideClassConfigExtractor(): ConfigExtractor =
         ClassConfigExtractor()
+
+    @ProvidesIntoSet
+    @Singleton
+    fun provideFileConfigExtractor(): ConfigExtractor =
+        FileConfigExtractor()
 
     @ProvidesIntoSet
     @Singleton

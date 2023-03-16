@@ -8,6 +8,7 @@ plugins {
 dependencies {
     api("org.jetbrains.kotlin:kotlin-reflect")
     api("org.jetbrains.kotlinx:kotlinx-coroutines-core")
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8")
     api("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j")
     api("com.google.inject:guice")
     api("com.github.ajalt.clikt:clikt")
@@ -21,8 +22,6 @@ dependencies {
     implementation("ch.qos.logback:logback-classic")
     implementation("org.apache.logging.log4j:log4j-to-slf4j")
     implementation("org.slf4j:jul-to-slf4j")
-    implementation("org.codehaus.janino:janino")
-    implementation("net.logstash.logback:logstash-logback-encoder")
 }
 
 publishing {

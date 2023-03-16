@@ -1,4 +1,4 @@
-package dev.koconut.framework.asm
+package dev.koconut.gradle.asm
 
 import org.jetbrains.org.objectweb.asm.ClassReader
 import org.jetbrains.org.objectweb.asm.ClassVisitor
@@ -25,7 +25,8 @@ object MainClassFinder {
 
     private fun createClassDescriptor(stream: InputStream): ClassDescriptor =
         with(ClassReader(stream)) {
-            ClassDescriptor(className).also { accept(it, ClassReader.SKIP_CODE) }
+            ClassDescriptor(className.replace('/', '.'))
+                .also { accept(it, ClassReader.SKIP_CODE) }
         }
 
     private class ClassDescriptor(

@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package com.unikoom.product.api.user;
+
+option java_multiple_files = true;
+
+service TestService {
+  rpc Echo(EchoRequest) returns (EchoResult) {}
+}
+
+message EchoRequest {
+  string message = 1;
+}
+
+message EchoResult {
+  string message = 1;
+}

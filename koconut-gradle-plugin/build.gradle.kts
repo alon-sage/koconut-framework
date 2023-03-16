@@ -11,6 +11,7 @@ repositories {
 
 dependencies {
     api("org.jetbrains.kotlin:kotlin-gradle-plugin")
+    api("com.google.protobuf:protobuf-gradle-plugin")
 }
 
 tasks.validatePlugins {
