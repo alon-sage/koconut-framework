@@ -1,4 +1,5 @@
 import com.google.protobuf.gradle.ProtobufExtension
+import com.google.protobuf.gradle.ProtobufPlugin
 import org.jetbrains.kotlin.gradle.utils.loadPropertyFromResources
 
 plugins {
@@ -27,7 +28,7 @@ val protobufArtifacts: Set<ResolvedDependency> = configurations
     .resolvedConfiguration
     .firstLevelModuleDependencies
 
-afterEvaluate {
+plugins.withType<ProtobufPlugin> {
     configure<ProtobufExtension> {
         protoc {
             artifact = protobufArtifacts.single { it.module.id.module == protoc.module }.name
@@ -41,7 +42,7 @@ afterEvaluate {
                     protobufArtifacts.single { it.module.id.module == protocGrpcKotlin.module }.name + ":jdk8@jar"
             }
         }
-        generateProtoTasks.all().configureEach {
+        generateProtoTasks.all().all {
             plugins {
                 create("grpc")
                 create("grpcKotlin")
