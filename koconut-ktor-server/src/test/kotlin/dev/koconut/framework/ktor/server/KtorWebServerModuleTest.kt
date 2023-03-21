@@ -18,17 +18,6 @@ import org.spekframework.spek2.style.specification.describe
 import kotlin.test.assertEquals
 
 class KtorWebServerModuleTest : Spek({
-    class TestModule : AbstractModule() {
-        @ProvidesIntoSet
-        @Singleton
-        fun provideTestRoute(): WebServerConfigurer =
-            WebServerConfigurer {
-                routing {
-                    get("/") { context.respondText("Lorem ipsum dolores") }
-                }
-            }
-    }
-
     val injector by memoized {
         applicationInjector {
             override(TestWebServerEngineModule())
@@ -46,4 +35,15 @@ class KtorWebServerModuleTest : Spek({
         beforeEachTest { runBlocking { bodyText = response.bodyAsText() } }
         it("returns body") { assertEquals("Lorem ipsum dolores", bodyText) }
     }
-})
+}) {
+    class TestModule : AbstractModule() {
+        @ProvidesIntoSet
+        @Singleton
+        fun provideTestRoute(): WebServerConfigurer =
+            WebServerConfigurer {
+                routing {
+                    get("/") { context.respondText("Lorem ipsum dolores") }
+                }
+            }
+    }
+}

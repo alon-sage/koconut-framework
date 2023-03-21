@@ -10,8 +10,8 @@ repositories {
 }
 
 dependencies {
-    api("org.jetbrains.kotlin:kotlin-gradle-plugin")
-    api("com.google.protobuf:protobuf-gradle-plugin")
+    compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin")
+    compileOnly("com.google.protobuf:protobuf-gradle-plugin")
 }
 
 tasks.validatePlugins {

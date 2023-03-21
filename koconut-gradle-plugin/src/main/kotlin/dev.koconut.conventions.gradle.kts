@@ -4,10 +4,6 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompilerOptions
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 import org.jetbrains.kotlin.gradle.utils.loadPropertyFromResources
 
-repositories {
-    mavenCentral()
-}
-
 val koconutBomSpec = loadPropertyFromResources("bom-spec.properties", "koconut-bom")
 
 with(dependencies) {
@@ -68,18 +64,20 @@ val resolvedMainClass by lazy {
         .singleOrNull()
 }
 
+plugins.withType<JavaPlugin> {
+    configure<JavaPluginExtension> {
+        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_1_8
+    }
+}
+
+plugins.withType<ApplicationPlugin> {
+    configure<JavaApplication> {
+        mainClass.convention(resolvedMainClass)
+    }
+}
+
 afterEvaluate {
-    extensions
-        .findByType<JavaPluginExtension>()
-        ?.apply {
-            targetCompatibility = JavaVersion.VERSION_1_8
-            sourceCompatibility = JavaVersion.VERSION_1_8
-        }
-
-    extensions
-        .findByType<JavaApplication>()
-        ?.apply { mainClass.convention(resolvedMainClass) }
-
     resolvedMainClass?.let { mainClass ->
         tasks.named<Jar>("jar") {
             manifest {
