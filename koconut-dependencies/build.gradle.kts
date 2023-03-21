@@ -47,6 +47,12 @@ dependencies {
         api("io.grpc:grpc-kotlin-stub:1.3.0")
         api("io.grpc:protoc-gen-grpc-kotlin:1.3.0")
         api("com.google.protobuf:protobuf-gradle-plugin:0.9.2")
+
+        api("com.graphql-java:graphql-java:20.0")
+        api("com.graphql-java:graphql-java-extended-scalars:20.0")
+        api("com.graphql-java:graphql-java-extended-validation:20.0")
+        api("com.graphql-java:java-dataloader:3.2.0")
+        api("com.apollographql.federation:federation-graphql-java-support:3.0.0")
     }
 }
 
