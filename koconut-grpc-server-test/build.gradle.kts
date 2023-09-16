@@ -10,6 +10,7 @@ dependencies {
     api("io.grpc:grpc-api")
 
     implementation("io.grpc:grpc-core")
+    implementation("io.grpc:grpc-inprocess")
 }
 
 publishing {

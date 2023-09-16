@@ -11,8 +11,8 @@ repositories {
 }
 
 dependencies {
-    api(platform("org.jetbrains.kotlin:kotlin-bom:1.8.10"))
-    api("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.10")
+    api(platform("org.jetbrains.kotlin:kotlin-bom:1.8.20"))
+    api("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.20")
 }
 
 tasks.withType<KotlinCompile> {
